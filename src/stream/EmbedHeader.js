@@ -11,8 +11,9 @@ class EmbedHeader extends Transform
     }
 
     _transform(chunk, encoding, done) {
+
         if (this._finished) {
-            this.push(chunk);
+            this.push(chunk, encoding);
         }
         done();
     }
