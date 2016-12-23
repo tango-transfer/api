@@ -35,15 +35,17 @@ class Storage
 
   retrieve(id) {
     return new Promise(res => {
+      const decrypt = this.getDecipher('rohan');
       const file = fs.createReadStream(`/tmp/${id}`);
-      res(file);
+      res(file.pipe(decrypt));
     });
   }
 
   store(file) {
+    const crypto = this.getCipher('rohan');
     const id = uuid();
     const output = fs.createWriteStream(`/tmp/${id}`);
-    file.pipe(output);
+    file.pipe(crypto).pipe(output);
     return new Promise(res => {
       res(id);
     });
