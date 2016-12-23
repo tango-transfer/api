@@ -4,36 +4,20 @@ const Storage = require('../Storage');
 
 const router = express.Router();
 
-
-const storage = new Storage();
+const fs = require('fs');
 
 
 router.get('/v1/blob/:id', (req, res) => {
-  const id = req.params.id;
-
-  storage.requestFile(id).then(file => {
-    res.setHeader('content-type', file.contentType);
-    res.setHeader('filename', file.name);
-    file.pipe(res);
-  }).catch(err => {
-    req.statusCode = 403;
-  });
+  res.setHeader("content-type", "image/png");
+  fs.createReadStream('/tmp/upload').pipe(res);
 });
 
 router.post('/v1/blob', busboy(), (req, res) => {
   if (req.busboy) {
     req.busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
-
-      storage.store(file).then(receipt => {
-        res.send(JSON.stringify(receipt));
-      });
-
+      const output = fs.createWriteStream('/tmp/upload');
+      file.pipe(output).on('finish', () => res.end());
     });
-
-    req.busboy.on('finish', function() {
-      console.log('done');
-    });
-
     req.pipe(req.busboy);
   }
 });
