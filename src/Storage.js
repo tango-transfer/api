@@ -34,7 +34,10 @@ class Storage
   }
 
   retrieve(id) {
-    return fs.createReadStream(`/tmp/${id}`);
+    return new Promise(res => {
+      const file = fs.createReadStream(`/tmp/${id}`);
+      res(file);
+    });
   }
 
   store(file) {

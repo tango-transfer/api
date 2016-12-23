@@ -11,9 +11,10 @@ const storage = new Storage();
 
 
 router.get('/v1/blob/:id', (req, res) => {
-  const file = storage.retrieve(req.params.id);
-  res.setHeader("content-type", "image/png");
-  file.pipe(res);
+  storage.retrieve(req.params.id).then(file => {
+    res.setHeader("content-type", "image/png");
+    file.pipe(res);
+  });
 });
 
 router.post('/v1/blob', busboy(), (req, res) => {
