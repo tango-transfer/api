@@ -3,17 +3,9 @@ const expect = require('expect.js');
 const fs = require('fs');
 const crypto = require('crypto');
 
-const EmbedHeader = require('../src/stream/EmbedHeader');
-const ExtractHeader = require('../src/stream/ExtractHeader');
+const hash = require('../src/hash');
 const Storage = require('../src/Storage');
 
-function sha1(stream) {
-  return new Promise(resolve => {
-    const shasum = crypto.createHash('sha1');
-    stream.on('data', buf => shasum.update(buf));
-    stream.on('end', () => resolve(shasum.digest('hex')));
-  });
-}
 
 describe('Storage', () => {
   let storage;
@@ -23,61 +15,62 @@ describe('Storage', () => {
     storage.dir = '/tmp';
   });
 
-  it('encodes data in a file and retrieves it', (done) => {
-    const embed = new EmbedHeader();
-    const extract = new ExtractHeader();
-
-    const stream = fs.createReadStream('./test2.png');
-
-    const processed = stream.pipe(embed).pipe(extract);
-
-    sha1(processed).then(digest => {
-      expect(digest).to.be('f7d27690d46b96abe12210ff14363fcc3dda8784');
-    }).then(done).catch(done);
-  });
-
-
-  context.skip('when storing file to disk', () => {
-    let promise;
+  context('when storing file to disk', () => {
+    let storePromise;
 
     beforeEach(() => {
-      const file = fs.createReadStream('./test/fixture/test.png', 'binary');
-      promise = storage.store(file, 'image/png', 'other_filename.png');
+      const file = fs.createReadStream('./test/fixture/image.png', 'binary');
+      storePromise = storage.store(file, 'image/png', 'other_filename.png');
     });
 
     it('returns a thenable', () => {
-      expect(promise.then).to.be.a('function');
+      expect(storePromise.then).to.be.a('function');
     });
 
-    it('returns promise that resolves with receipt', (done) => {
-      promise.then(receipt => {
-        expect(receipt.id).to.be.ok();
-        expect(receipt.secret).to.be.ok();;
+    it('resolves new file id', (done) => {
+      storePromise.then(receipt => {
+        expect(receipt.id).to.match(/[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}/);
       }).then(done).catch(done);
     });
 
+    it('resolves stream that can be waited for', (done) => {
+      storePromise.then(receipt => {
+        receipt.stream.on('finish', done);
+      }).catch(done);
+    });
+
     context('then retreiving file using receipt id', () => {
+      let retreivePromise;
+
       beforeEach((done) => {
-        promise.then(receipt => {
-          promise = storage.retrieve(receipt.id);
+        storePromise.then(receipt => {
+          return new Promise(r => {
+            receipt.stream.on('finish', () => r(receipt));
+          });
+        })
+        .then(receipt => {
+          retreivePromise = storage.retrieve(receipt.id);
         }).then(done).catch(done);
       });
 
       it('returns a thenable', () => {
-        expect(promise.then).to.be.a('function');
+        expect(retreivePromise.then).to.be.a('function');
       });
 
-      it('resolves with written metadata', (done) => {
-        promise.then(([pass, meta]) => {
+      it('resolves with meta', (done) => {
+        retreivePromise.then(({meta}) => {
           expect(meta.contentType).to.be('image/png');
           expect(meta.name).to.be('other_filename.png');
         }).then(done).catch(done);
       });
 
       it('resolves stream with expected data', (done) => {
-
+        retreivePromise.then((payload) => {
+          hash(payload.stream, 'sha1').then(digest => {
+            expect(digest).to.be('8f4e8178e595b15c062e2d6d1bc9cb25d1101a97');
+          }).then(done).catch(done);
+        });
       });
-
     });
   });
 });

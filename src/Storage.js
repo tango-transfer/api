@@ -2,7 +2,8 @@ const fs = require('fs');
 const crypto = require('crypto');
 const uuid = require('uuid/v4');
 
-const MetaEmbedder = require('./MetaEmbedder');
+const EmbedHeader = require('./stream/EmbedHeader');
+const ExtractHeader = require('./stream/ExtractHeader');
 
 function random() {
   return new Promise(resolve => {
@@ -18,8 +19,6 @@ class Storage
   constructor() {
     this.algo = 'aes-256-ctr';
     this.dir = '/tmp/otp-transmit';
-
-    this.embedder = new MetaEmbedder();
   }
 
   getCipher(secret) {
@@ -35,27 +34,36 @@ class Storage
   }
 
   retrieve(id) {
-    const path = this.path(id);
-    const stream = fs.createReadStream(path, 'binary');
-    return this.embedder.extract(stream);
+    return new Promise(resolve => {
+      const path = this.path(id);
+      const disk = fs.createReadStream(path, 'binary');
+      const extract = new ExtractHeader();
+      extract.on('decoded', meta => {
+        resolve({
+          meta,
+          stream: decoded,
+        });
+      });
+      const decoded = disk.pipe(extract);
+    });
   }
 
-  store(stream, contentType, name) {
+  store(readable, contentType, name) {
     const meta = { contentType, name };
+    const embed = new EmbedHeader(meta);
+
     return Promise.all([
-      this.embedder.embed(stream, meta),
       uuid(),
       random(),
     ])
-    .then(([stream, id, secret]) => {
+    .then(([id]) => {
       const path = this.path(id);
       const disk = fs.createWriteStream(path, 'binary');
-      return new Promise(resolve => {
-        stream.pipe(disk);
-        disk.on('close', () => {
-          resolve({id, secret});
-        });
-      });
+
+      return {
+        id,
+        stream: readable.pipe(embed).pipe(disk),
+      }
     });
   }
 }
