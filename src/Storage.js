@@ -18,7 +18,7 @@ class Storage
 {
   constructor() {
     this.algo = 'aes-256-ctr';
-    this.dir = '/tmp/otp-transmit';
+    this.dir = '/tmp';
   }
 
   getCipher(secret) {
@@ -36,7 +36,8 @@ class Storage
   retrieve(id) {
     return new Promise(res => {
       const decrypt = this.getDecipher('rohan');
-      const file = fs.createReadStream(`/tmp/${id}`);
+      const path = this.path(id);
+      const file = fs.createReadStream(path);
       res(file.pipe(decrypt));
     });
   }
@@ -44,7 +45,8 @@ class Storage
   store(file) {
     const crypto = this.getCipher('rohan');
     const id = uuid();
-    const output = fs.createWriteStream(`/tmp/${id}`);
+    const path = this.path(id);
+    const output = fs.createWriteStream(path);
     file.pipe(crypto).pipe(output);
     return new Promise(res => {
       res(id);
