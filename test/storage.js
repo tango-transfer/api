@@ -4,6 +4,7 @@ const fs = require('fs');
 const crypto = require('crypto');
 
 const EmbedHeader = require('../src/stream/EmbedHeader');
+const ExtractHeader = require('../src/stream/ExtractHeader');
 const Storage = require('../src/Storage');
 
 function sha1(stream) {
@@ -24,11 +25,13 @@ describe('Storage', () => {
 
   it('encodes data in a file and retrieves it', (done) => {
     const embed = new EmbedHeader();
+    const extract = new ExtractHeader();
 
     const stream = fs.createReadStream('./test2.png');
-    const embedded = stream.pipe(embed);
 
-    sha1(embedded).then(digest => {
+    const processed = stream.pipe(embed).pipe(extract);
+
+    sha1(processed).then(digest => {
       expect(digest).to.be('f7d27690d46b96abe12210ff14363fcc3dda8784');
     }).then(done).catch(done);
   });

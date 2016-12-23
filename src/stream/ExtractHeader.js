@@ -8,12 +8,12 @@ class ExtractHeader extends Transform
 
         this._maxLen = maxLen;
         this._buff = '';
-        this._finished = false;
+        this._finished = true;
     }
 
     _transform(chunk, encoding, done) {
         if (this._finished) {
-            this.push(chunk);
+            this.push(chunk, encoding);
         } else {
             // collect string into buffer
             this._buff += chunk.toString();
