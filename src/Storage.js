@@ -41,7 +41,9 @@ class Storage
     const id = uuid();
     const output = fs.createWriteStream(`/tmp/${id}`);
     file.pipe(output);
-    return id;
+    return new Promise(res => {
+      res(id);
+    });
   }
 }
 
