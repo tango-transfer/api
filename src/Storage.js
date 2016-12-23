@@ -61,7 +61,7 @@ class Storage
       const disk = fs.createWriteStream(path, 'binary');
 
       return {
-        id,
+        receipt: { id },
         stream: readable.pipe(embed).pipe(disk),
       }
     });

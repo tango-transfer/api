@@ -28,8 +28,8 @@ describe('Storage', () => {
     });
 
     it('resolves new file id', (done) => {
-      storePromise.then(receipt => {
-        expect(receipt.id).to.match(/[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}/);
+      storePromise.then(response => {
+        expect(response.receipt.id).to.match(/[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}/);
       }).then(done).catch(done);
     });
 
@@ -43,9 +43,9 @@ describe('Storage', () => {
       let retreivePromise;
 
       beforeEach((done) => {
-        storePromise.then(receipt => {
+        storePromise.then(response => {
           return new Promise(r => {
-            receipt.stream.on('finish', () => r(receipt));
+            response.stream.on('finish', () => r(response.receipt));
           });
         })
         .then(receipt => {
