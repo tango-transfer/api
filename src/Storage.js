@@ -34,37 +34,14 @@ class Storage
   }
 
   retrieve(id) {
-    return new Promise(resolve => {
-      const path = this.path(id);
-      const disk = fs.createReadStream(path, 'binary');
-      const extract = new ExtractHeader();
-      extract.on('decoded', meta => {
-        resolve({
-          meta,
-          stream: decoded,
-        });
-      });
-      const decoded = disk.pipe(extract);
-    });
+    return fs.createReadStream(`/tmp/${id}`);
   }
 
-  store(readable, contentType, name) {
-    const meta = { contentType, name };
-    const embed = new EmbedHeader(meta);
-
-    return Promise.all([
-      uuid(),
-      random(),
-    ])
-    .then(([id]) => {
-      const path = this.path(id);
-      const disk = fs.createWriteStream(path, 'binary');
-
-      return {
-        receipt: { id },
-        stream: readable.pipe(embed).pipe(disk),
-      }
-    });
+  store(file) {
+    const id = uuid();
+    const output = fs.createWriteStream(`/tmp/${id}`);
+    file.pipe(output);
+    return id;
   }
 }
 
