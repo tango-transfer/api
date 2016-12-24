@@ -29,7 +29,7 @@ app.server = server;
 ws(server, coord);
 
 
-server.listen(8080);
+server.listen(process.env.PORT || 8080);
 server.on('listening', () => {
     const bound = server.address();
     console.info(`App running on ${bound.address}:${bound.port}`);
