@@ -56,7 +56,10 @@ class Storage
     .then(meta => {
       const decipher = this.decipher(secret);
       const file = fs.createReadStream(path);
-      return file.pipe(decipher);
+      return {
+        meta,
+        stream: file.pipe(decipher),
+      }
     });
   }
 
