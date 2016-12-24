@@ -2,9 +2,6 @@ const fs = require('fs');
 const crypto = require('crypto');
 const uuid = require('uuid/v4');
 
-const EmbedHeader = require('./stream/EmbedHeader');
-const ExtractHeader = require('./stream/ExtractHeader');
-
 const file = require('./file');
 
 function random() {
