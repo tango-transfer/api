@@ -8,11 +8,7 @@ const ExtractHeader = require('./stream/ExtractHeader');
 const file = require('./file');
 
 function random() {
-  return new Promise(resolve => {
-    crypto.randomBytes(32, (err, buffer) => {
-      resolve(buffer.toString('hex'));
-    });
-  });
+  return crypto.randomBytes(32).toString('hex');
 }
 
 function decrypt(str, decipher) {
@@ -47,20 +43,17 @@ class Storage
     return this.dir + '/' + id;
   }
 
-  retrieve(id) {
+  retrieve(id, secret) {
     const path = this.path(id);
-    const secret = 'rohan';
 
     return file.read(path + '.meta')
     .then(buffer => {
       const encrypted = buffer.toString();
       const decipher = this.decipher(secret);
       const json = decrypt(encrypted, decipher);
-      console.log(encrypted, json);
       return JSON.parse(json);
     })
     .then(meta => {
-
       const decipher = this.decipher(secret);
       const file = fs.createReadStream(path);
       return file.pipe(decipher);
@@ -71,7 +64,7 @@ class Storage
     const id = uuid();
     const path = this.path(id);
 
-    const secret = 'rohan';
+    const secret = random();
 
     {
       const cipher = this.cipher(secret);
@@ -89,7 +82,7 @@ class Storage
     }
 
     return new Promise(res => {
-      res(id);
+      res({id, secret});
     });
   }
 }

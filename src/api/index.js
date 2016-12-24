@@ -10,8 +10,8 @@ const fs = require('fs');
 const storage = new Storage();
 
 
-router.get('/v1/blob/:id', (req, res) => {
-  storage.retrieve(req.params.id).then(file => {
+router.get('/v1/blob/:id/:secret', (req, res) => {
+  storage.retrieve(req.params.id, req.params.secret).then(file => {
     res.setHeader("content-type", "image/png");
     file.pipe(res);
   });
@@ -20,8 +20,8 @@ router.get('/v1/blob/:id', (req, res) => {
 router.post('/v1/blob', busboy(), (req, res) => {
   if (req.busboy) {
     req.busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
-      storage.store(file, { mime: mimetype, name: filename }).then(id => {
-        res.end(id);
+      storage.store(file, { mime: mimetype, name: filename }).then(receipt => {
+        res.end(JSON.stringify(receipt));
       });
     });
     req.pipe(req.busboy);
