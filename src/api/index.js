@@ -20,7 +20,7 @@ router.get('/v1/blob/:id', (req, res) => {
 router.post('/v1/blob', busboy(), (req, res) => {
   if (req.busboy) {
     req.busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
-      storage.store(file).then(id => {
+      storage.store(file, { mime: mimetype, name: filename }).then(id => {
         res.end(id);
       });
     });
