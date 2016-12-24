@@ -4,3 +4,16 @@ body {
 
 .upload input[type=file] {
 }
+
+.upload .progress-bar {
+  position: absolute;
+    left: 0;
+    right: 0;
+  transform: translateY(-2.5em);
+}
+
+.upload .progress {
+  background: #00ffd5;
+  height: 7px;
+  width: 0;
+}

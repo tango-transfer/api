@@ -6,8 +6,9 @@ body {
 }
 
 h1 {
-  font-size: 6vw;
+  font-size: 72px;
   letter-spacing: -0.035em;
+  margin-top: 0;
 }
 
 button {
