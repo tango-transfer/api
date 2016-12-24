@@ -1,14 +1,15 @@
 function requestAccess(client, id, signature, timeout = 60) {
   return new Promise((resolve, reject) => {
-    function unbind() {
+    function done() {
+      clearTimeout(timer);
       client.conn.removeListener('message', listener);
     }
 
     function listener(msg) {
       const payload = JSON.parse(msg);
       if (payload.type === 'ALLOW' && payload.id === id) {
+        done();
         resolve(payload.secret);
-        unbind();
       }
     }
 
@@ -21,9 +22,9 @@ function requestAccess(client, id, signature, timeout = 60) {
 
     client.send(msg);
 
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       reject(new Error('Timeout'));
-      unbind();
+      done();
     }, timeout * 1000);
   });
 }
