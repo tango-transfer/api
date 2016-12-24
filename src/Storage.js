@@ -48,6 +48,9 @@ class Storage
       return JSON.parse(json);
     })
     .then(meta => {
+      const stats = fs.statSync(path);
+      meta.size = stats.size;
+
       const decipher = this.decipher(secret);
       const file = fs.createReadStream(path);
       return {

@@ -6,6 +6,7 @@ module.exports = function api(coord) {
 
   router.get('/v1/blob/:id', (req, res) => {
     coord.request(req.params.id, req.query.sign).then(({meta, stream}) => {
+      res.setHeader('Content-Length', meta.size);
       res.setHeader('Content-Type', 'application/octet-stream');
       res.setHeader('Content-disposition', `filename="${meta.name}"`);
       stream.pipe(res);
