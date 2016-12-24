@@ -3,6 +3,10 @@ body {
 }
 
 .download input[name=sign] {
+  border: 0;
+  border-bottom: solid 1px black;
   font-size: 24px;
   letter-spacing: .2em;
+  margin: 1em 1em 1em 0;
+  width: 16em;
 }
