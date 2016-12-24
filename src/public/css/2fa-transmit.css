@@ -18,10 +18,12 @@ button {
   cursor: pointer;
   font-size: 24px;
   letter-spacing: .2em;
+  outline: none;
   padding: .7em 1.2em;
   text-transform: uppercase;
 }
 
 input {
   font-size: 18px;
+  outline: none;
 }

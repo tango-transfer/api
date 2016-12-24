@@ -13,7 +13,11 @@ body {
 }
 
 .upload .progress {
-  background: #00ffd5;
+  background: linear-gradient(to right,
+    transparent,
+    #9636ff 100%);
+  border-radius: 0 3px 3px 0;
   height: 7px;
-  width: 0;
+  transition: .2s width ease;
+  width: 75%;
 }
