@@ -12,7 +12,7 @@ module.exports = function api(coord) {
     }).catch(err => {
       console.error(err.message);
       res.statusCode = 404;
-      res.end();
+      res.render('404');
     });
   });
 
