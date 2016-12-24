@@ -1,5 +1,5 @@
 {
-  "name": "otp-transmit",
+  "name": "2fa-transmit",
   "version": "0.0.0",
   "description": "",
   "main": "index.js",
