@@ -2,12 +2,41 @@ body {
   justify-content: center;
 }
 
+.download {
+  height: 300px;
+  width: 620px;
+  perspective: 500px;
+}
+
 .download input[name=sign] {
   border: 0;
   border-bottom: solid 1px black;
   font-size: 24px;
   letter-spacing: .2em;
   margin: 1em 1em 1em 0;
-  padding: 0.4em 0.2em;
   width: 16em;
+}
+
+.download.requested h1 {
+  text-align: center;
+}
+
+.download.requested form {
+  display: none;
+}
+
+.download .wait {
+  background: url('/img/refresh.svg') no-repeat;
+  background-size: contain;
+  margin: -5em auto;
+  transition: transform 60s ease-out;
+  transform: rotateZ(0deg);
+  height: 240px;
+  width: 240px;
+  visibility: hidden;
+}
+
+.download.requested .wait {
+  visibility: initial;
+  transform: rotateZ(2160deg);
 }

@@ -14,10 +14,10 @@ body {
 
 .upload .progress {
   background: linear-gradient(to right,
-    transparent,
-    #9636ff 100%);
+    #e587b5,
+    #ff1a8a 80%);
   border-radius: 0 3px 3px 0;
   height: 7px;
   transition: .2s width ease;
-  width: 75%;
+  width: 0;
 }
