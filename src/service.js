@@ -13,7 +13,7 @@ const app = express();
 app.use('/', express.static('public'));
 
 const store = new Storage();
-store.dir = '/tmp';
+store.dir = process.env.STORAGE_DIR || '/tmp';
 
 const coord = new Coordinator(store);
 
@@ -21,8 +21,6 @@ const apiRouter = api(coord);
 app.use('/api', apiRouter);
 
 const uiRouter = ui(app);
-
-
 
 
 const server = http.createServer(app);

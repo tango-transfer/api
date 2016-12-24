@@ -1,12 +1,9 @@
 const fs = require('fs');
 const crypto = require('crypto');
 const uuid = require('uuid/v4');
-
+const random = require('./random');
 const file = require('./file');
 
-function random() {
-  return crypto.randomBytes(32).toString('hex');
-}
 
 function decrypt(str, decipher) {
   let dec = decipher.update(str, 'hex', 'utf8');
@@ -64,7 +61,7 @@ class Storage
     const id = uuid();
     const path = this.path(id);
 
-    const secret = random();
+    const secret = random.bytes().toString('hex');
 
     {
       const cipher = this.cipher(secret);

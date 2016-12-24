@@ -1,0 +1,26 @@
+body {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Helvetica Neue', sans-serif;
+}
+
+h1 {
+  font-size: 6vw;
+  letter-spacing: -0.035em;
+}
+
+button {
+  border: 0;
+  background: #000;
+  color: #fff;
+  cursor: pointer;
+  font-size: 24px;
+  letter-spacing: .2em;
+  padding: .7em 1.2em;
+  text-transform: uppercase;
+}
+
+input {
+  font-size: 18px;
+}

@@ -1,8 +1,4 @@
 (function() {
-  const conn = new WebSocket('ws://localhost:8080/ws/monitor');
-  const requests = document.querySelectorAll('.requests');
-  const requestTemplate = document.querySelector('template.request');
-
   function addRequest(parent, req) {
     const item = document
         .importNode(requestTemplate.content, true)
@@ -32,6 +28,8 @@
     conn.send(msg);
   }
 
+  const loc = window.location;
+  const conn = new WebSocket(`ws://${loc.hostname}:${loc.port}/ws/monitor`);
   const incoming = new Map();
 
   conn.addEventListener('open', () => {
@@ -59,4 +57,11 @@
       }
     }
   });
+
+  [...document.querySelectorAll('.link a')].forEach(anchor => {
+    anchor.textContent = anchor.href;
+  });
+
+  const requests = document.querySelectorAll('.requests');
+  const requestTemplate = document.querySelector('template.request');
 }());

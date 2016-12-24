@@ -32,7 +32,7 @@ class Coordinator {
     console.log(this.owners);
   }
 
-  request(id, signature = '1234') {
+  request(id, signature = null) {
     return new Promise(resolve => {
       if (!this.owners.has(id)) {
         throw new Error(`No owner for ${id}`);

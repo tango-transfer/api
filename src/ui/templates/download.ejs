@@ -1,0 +1,17 @@
+<html>
+<head>
+  <title>Download File - 2FA Transmit</title>
+  <link href="/css/2fa-transmit.css" rel="stylesheet" />
+  <link href="/css/download.css" rel="stylesheet" />
+</head>
+<body>
+  <section class="download">
+    <h1>Download File</h1>
+
+    <form action="/api/v1/blob/<%= fileId %>" method="GET">
+      <input type="text" name="sign" value="<%= sign %>" />
+      <button type="submit">Request</button>
+    </form>
+  </section>
+</body>
+</html>

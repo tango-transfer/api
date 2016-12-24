@@ -1,12 +1,21 @@
-<!DOCTYPE html>
 <html>
 <head>
   <title>Dispatch</title>
+  <link href="/css/2fa-transmit.css" rel="stylesheet" />
+  <link href="/css/dispatch.css" rel="stylesheet" />
 </head>
 <body>
+  <section class="meta">
+    <h1 class="filename"><%= filename %></h1>
+  </section>
+
+  <section class="link">
+    Shareable Link
+    <a class="public" href="/file/<%= receipt.id %>" target="_blank"></a>
+  </section>
+
   <template class="request">
     <div class="request">
-      <div class="filename"></div>
       <div class="signature"></div>
       <div class="buttons">
         <button name="allow">Allow</button>
@@ -15,8 +24,7 @@
     </div>
   </template>
 
-  <div class="requests" data-receipt="<%= receipt %>">
-
+  <div class="requests" data-receipt="<%= JSON.stringify(receipt) %>">
   </div>
 
   <script src="/js/dispatch.js"></script>

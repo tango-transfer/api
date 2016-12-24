@@ -6,7 +6,6 @@ module.exports = function ws(server, coord) {
 
   wss.on('connection', function connection(conn) {
     const client = new Client(conn);
-    console.log('conn!');
 
     conn.on('message', function incoming(msg) {
       console.log(msg);

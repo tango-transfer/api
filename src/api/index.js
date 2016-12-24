@@ -1,12 +1,11 @@
 const express = require('express');
-
 const busboy = require('connect-busboy');
 
 module.exports = function api(coord) {
   const router = express.Router();
 
   router.get('/v1/blob/:id', (req, res) => {
-    coord.request(req.params.id).then(({meta, stream}) => {
+    coord.request(req.params.id, req.query.sign).then(({meta, stream}) => {
       res.setHeader("content-type", meta.mime);
       res.setHeader("filename", meta.name);
       stream.pipe(res);
