@@ -1,5 +1,6 @@
 const express = require('express');
 
+const Coordinator = require('./Coordinator');
 const Storage = require('./Storage');
 const api = require('./api');
 
@@ -9,7 +10,10 @@ app.use('/', express.static('public'));
 
 const store = new Storage();
 store.dir = '/tmp';
-const router = api(store);
+
+const coord = new Coordinator(store);
+
+const router = api(coord);
 
 app.use('/api', router);
 
