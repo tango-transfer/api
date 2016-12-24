@@ -1,12 +1,13 @@
 const fs = require('fs');
 
 function read(path) {
-  return new Promise(resolve => {
+  return new Promise((resolve, reject) => {
     fs.readFile(path, (err, data) => {
       if (err) {
-        throw err;
+        reject(err);
+      } else {
+        resolve(data);
       }
-      resolve(data);
     });
   });
 }
