@@ -12,7 +12,8 @@ const storage = new Storage();
 
 router.get('/v1/blob/:id/:secret', (req, res) => {
   storage.retrieve(req.params.id, req.params.secret).then(({meta, stream}) => {
-    res.setHeader("content-type", "image/png");
+    res.setHeader("content-type", meta.mime);
+    res.setHeader("filename", meta.name);
     stream.pipe(res);
   });
 });
