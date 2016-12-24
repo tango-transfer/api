@@ -1,0 +1,22 @@
+* Learn MSAIA eco system
+* Defined models and make them fit with DB
+* Write test for models + endpoints
+* Define endpoints have them make sense inside the swagger/MSAIA env.
+* Create new mock data
+* ~Bug in SQLAlchemy with eager default and validation
+* Database upgrading
+* Read about Linking Relationships with Backref
+* Find out how to represent history modeled by using SQLAlchemy
+* Find out how to implement consistency check before update/insert in SQLAlchemy
+* Discover we can not have consistency with the expected model
+* Hard to trace error: OverflowError: Unsupported UTF-8 sequence length when encoding string
+* Test flakiness from side effects while using test framework
+* Authentication for administering
+* User session
+* Empty args bugs
+* Admins and users only can delete their shifts
+* Testing for different user levels on create shifts vs signup
+* How to update ACL and roles
+* Validation setup suffers from premature validation
+* Serializers only does partial work and knowing which parts is not documented
+* Serializers use interchangable casing

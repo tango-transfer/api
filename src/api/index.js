@@ -1,44 +1,41 @@
 const express = require('express');
-const request = require('request');
+const busboy = require('connect-busboy');
+const Storage = require('../Storage');
+
 const router = express.Router();
 
-const FileArchive = require('../FileArchive');
 
-const archive = new FileArchive();
+const storage = new Storage();
 
-const listeners = new Map();
-const secrets = new Map();
-
-function requestPermission(id, owners) {
-}
 
 router.get('/v1/blob/:id', (req, res) => {
   const id = req.params.id;
 
-  const owners = listeners.get(id);
-
-  owners.forEach(owner => {
-
-
-  })
-
-  const secret = secrets.get(id);
-
-  archive.requestFile(id).then(file => {
-    req.send(file);
+  storage.requestFile(id).then(file => {
+    res.setHeader('content-type', file.contentType);
+    res.setHeader('filename', file.name);
+    file.pipe(res);
   }).catch(err => {
-    req.status = 401;
+    req.statusCode = 403;
   });
 });
 
-router.post('/v1/blob', (req, res) => {
-  const id = getRandomFileName();
-  const secret = getSecret();
+router.post('/v1/blob', busboy(), (req, res) => {
+  if (req.busboy) {
+    req.busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
 
-  secrets.set(id, secret);
+      storage.store(file).then(receipt => {
+        res.send(JSON.stringify(receipt));
+      });
 
-  archive.store(id, request.file_data)
-    .then(receipt => res.send(receipt);
+    });
+
+    req.busboy.on('finish', function() {
+      console.log('done');
+    });
+
+    req.pipe(req.busboy);
+  }
 });
 
 module.exports = router;
