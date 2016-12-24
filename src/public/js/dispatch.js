@@ -29,7 +29,7 @@
   }
 
   const loc = window.location;
-  const conn = new WebSocket(`ws://${loc.hostname}:${loc.port}/ws/monitor`);
+  const conn = new WebSocket(`wss://${loc.hostname}:${loc.port}/ws/monitor`);
   const incoming = new Map();
 
   conn.addEventListener('open', () => {
