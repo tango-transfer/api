@@ -1,8 +1,13 @@
 <html>
-<body>
-  <form action="/api/v1/blob/" method="POST" enctype="multipart/form-data">
-    <input type="file" name="file">
-    <button type="submit">Upload</button>
-  </form>
-</body>
+  <head>
+
+  </head>
+  <body>
+    <form id="upload" action="/api/v1/blob/" method="POST" enctype="multipart/form-data">
+      <input type="file" name="file">
+      <button type="submit">Upload</button>
+    </form>
+
+    <script type="text/javascript" src="/js/upload.js"></script>
+  </body>
 </html>

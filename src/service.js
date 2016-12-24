@@ -1,8 +1,12 @@
+const http = require('http');
 const express = require('express');
 
 const Coordinator = require('./Coordinator');
 const Storage = require('./Storage');
 const api = require('./api');
+const ui = require('./ui');
+const ws = require('./ws');
+
 
 
 const app = express();
@@ -13,13 +17,21 @@ store.dir = '/tmp';
 
 const coord = new Coordinator(store);
 
-const router = api(coord);
+const apiRouter = api(coord);
+app.use('/api', apiRouter);
 
-app.use('/api', router);
+const uiRouter = ui(app);
 
 
-const server = app.listen(8080);
 
+
+const server = http.createServer(app);
+app.server = server;
+
+ws(server, coord);
+
+
+server.listen(8080);
 server.on('listening', () => {
     const bound = server.address();
     console.info(`App running on ${bound.address}:${bound.port}`);

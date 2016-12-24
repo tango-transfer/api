@@ -5,12 +5,15 @@ const busboy = require('connect-busboy');
 module.exports = function api(coord) {
   const router = express.Router();
 
-  router.get('/v1/blob/:id/:secret', (req, res) => {
-    const store = coord.store;
-    store.retrieve(req.params.id, req.params.secret).then(({meta, stream}) => {
+  router.get('/v1/blob/:id', (req, res) => {
+    coord.request(req.params.id).then(({meta, stream}) => {
       res.setHeader("content-type", meta.mime);
       res.setHeader("filename", meta.name);
       stream.pipe(res);
+    }).catch(err => {
+      console.error(err.message);
+      res.statusCode = 404;
+      res.end();
     });
   });
 
