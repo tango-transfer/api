@@ -16,9 +16,11 @@
     const url = form.action;
     const body = new FormData(form);
 
-    if (!body.get('file').size) {
+    if (!form.file.value) {
       return;
     }
+
+    const filename = form.file.value.split(/(\\|\/)/g).pop();
 
     const XHR = new XMLHttpRequest();
     XHR.open('POST', url, true);
@@ -33,9 +35,7 @@
 
     XHR.addEventListener('load', function() {
       prog(1);
-
       const {id, secret} = JSON.parse(this.responseText);
-      const filename = body.get('file').name;
       const url = `/dispatch/${id}/${secret}?name=` + encodeURIComponent(filename);
 
       window.location = url;
