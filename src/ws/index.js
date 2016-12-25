@@ -8,11 +8,10 @@ module.exports = function ws(server, coord) {
     const client = new Client(conn);
 
     conn.on('message', function incoming(msg) {
-      console.log(msg);
       const payload = JSON.parse(msg);
       if (payload.type === 'CLAIM') {
         client.claims.add(payload.id);
-        coord.claim(payload.id, client);
+        coord.claim(payload.id, payload.secret, client);
       }
     });
 

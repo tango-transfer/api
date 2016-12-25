@@ -7,14 +7,22 @@ class Coordinator {
     this.owners = new Map();
   }
 
-  claim(id, client) {
-    if (!this.owners.has(id)) {
-      this.owners.set(id, new Set());
-    }
+  claim(id, secret, client) {
+    return this.store.check(id, secret)
+    .then(isValid => {
+      if (!isValid) {
+        return;
+      }
 
-    this.owners.get(id).add(client);
+      if (!this.owners.has(id)) {
+        this.owners.set(id, new Set());
+      }
 
-    console.log(this.owners);
+      const owners = this.owners.get(id);
+      owners.add(client);
+
+      console.info('%d owners for %s', owners.size, id);
+    });
   }
 
   release(id, client) {
@@ -25,11 +33,11 @@ class Coordinator {
     const owners = this.owners.get(id);
     owners.delete(client);
 
+    console.info('%d owners for %s', owners.size, id);
+
     if (owners.size === 0) {
       this.owners.delete(id);
     }
-
-    console.log(this.owners);
   }
 
   request(id, signature = null) {

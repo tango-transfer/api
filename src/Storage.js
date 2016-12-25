@@ -37,6 +37,12 @@ class Storage
     return this.dir + '/' + id;
   }
 
+  check(id, secret) {
+    return this.meta(id, secret)
+    .then(() => true)
+    .catch(() => false);
+  }
+
   meta(id, secret) {
     const path = this.path(id);
     return file.read(path + '.meta')

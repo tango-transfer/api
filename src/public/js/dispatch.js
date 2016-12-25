@@ -24,7 +24,6 @@
 
   function send(data) {
     const msg = JSON.stringify(data);
-    console.log('Sending message', msg);
     conn.send(msg);
   }
 
@@ -44,6 +43,7 @@
       send({
         type: 'CLAIM',
         id: receipt.id,
+        secret: receipt.secret,
       });
     });
   });
