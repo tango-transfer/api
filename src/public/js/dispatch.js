@@ -1,26 +1,58 @@
 (function() {
+  function countdown(from, onCount, onComplete) {
+    function stop() {
+      clearInterval(timer);
+    }
+
+    onCount(from);
+
+    const timer = setInterval(() => {
+      onCount(--from);
+      if (from <= 0) {
+        onComplete();
+        stop();
+      }
+    }, 1000);
+
+    return stop;
+  }
+
   function addRequest(parent, req) {
     const item = document
         .importNode(requestTemplate.content, true)
         .children[0];
 
-    item.querySelector('.signature').textContent = req.signature;
+    function time(seconds) {
+      item.querySelector('.timeout').textContent = seconds;
+    }
 
-    item.querySelector('button[name=allow]').addEventListener('click', () => {
+    function allow() {
       send({
         type: 'ALLOW',
         id: req.id,
         secret: parent.secret,
       });
 
+      stop();
       item.classList.add('allowed');
-    });
+    }
 
-    item.querySelector('button[name=ignore]').addEventListener('click', () => {
+    function ignore() {
+      stop();
       parent.element.removeChild(item);
-    });
+    }
+
+    item.querySelector('.signature').textContent = req.signature;
+
+    item.querySelector('button[name=allow]')
+        .addEventListener('click', allow);
+
+    item.querySelector('button[name=ignore]')
+        .addEventListener('click', ignore);
 
     parent.element.appendChild(item);
+
+    const stop = countdown(req.timeout, time, ignore);
   }
 
   function send(data) {

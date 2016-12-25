@@ -24,7 +24,9 @@ body {
 
   .requests .request {
     background: #ff1a8a;
+    color: #fff;
     margin: 1em;
+    padding: 1em;
     text-align: center;
   }
 
@@ -38,18 +40,23 @@ body {
         pointer-events: none;
       }
 
+    .requests .request .timeout {
+      font-weight: bold;
+      letter-spacing: .1em;
+      opacity: .6;
+      text-align: right;
+    }
+
     .requests .request .signature {
-      color: #fff;
       font-size: 48px;
       font-weight: bold;
-      margin: .7em 1em;
+      margin: .2em 0 .7em;
     }
 
     .requests .request .buttons {
       font-size: inherit;
       display: flex;
       justify-content: space-between;
-      margin: 1em;
     }
 
     .requests .request button {
