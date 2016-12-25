@@ -37,9 +37,8 @@ class Storage
     return this.dir + '/' + id;
   }
 
-  retrieve(id, secret) {
+  meta(id, secret) {
     const path = this.path(id);
-
     return file.read(path + '.meta')
     .then(buffer => {
       const encrypted = buffer.toString();
@@ -50,8 +49,15 @@ class Storage
     .then(meta => {
       const stats = fs.statSync(path);
       meta.size = stats.size;
+      return meta;
+    });
+  }
 
+  retrieve(id, secret) {
+    return this.meta(id, secret)
+    .then(meta => {
       const decipher = this.decipher(secret);
+      const path = this.path(id);
       const file = fs.createReadStream(path);
       return {
         meta,
