@@ -1,6 +1,13 @@
 {
+  "http": {
+    "port": 8080
+  },
   "https": {
+    "port": 8443,
     "key": "../cert/key.pem",
     "cert": "../cert/cert.pem"
+  },
+  "storage": {
+    "dir": "/tmp"
   }
 }
