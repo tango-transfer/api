@@ -14,6 +14,7 @@ body {
   font-size: 24px;
   letter-spacing: .2em;
   margin: 1em 1em 1em 0;
+  padding: .3em;
   width: 16em;
 }
 
@@ -26,17 +27,35 @@ body {
 }
 
 .download .wait {
-  background: url('/img/refresh.svg') no-repeat;
-  background-size: contain;
-  margin: -5em auto;
-  transition: transform 60s ease-out;
-  transform: rotateZ(0deg);
-  height: 240px;
-  width: 240px;
-  visibility: hidden;
+  display: none;
+  margin-top: -3.5em;
+}
+
+.download .wait p {
+  font-size: 1.5em;
+  text-align: center;
 }
 
 .download.requested .wait {
-  visibility: initial;
-  transform: rotateZ(2160deg);
+  display: block;
+}
+
+.download .wait .signature {
+  font-size: larger;
+  font-weight: bold;
+  letter-spacing: 0.1em;
+}
+
+@keyframes rotate {
+  0% { transform: rotateZ(0deg); }
+  100% { transform: rotateZ(360deg); }
+}
+
+.download .spinner {
+  animation: rotate 3s infinite linear;
+  background: url('/img/refresh.svg') no-repeat;
+  background-size: contain;
+  margin: auto;
+  height: 140px;
+  width: 140px;
 }
