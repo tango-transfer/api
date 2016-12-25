@@ -1,9 +1,12 @@
 (function() {
   const form = document.querySelector('#upload');
   const progress = document.querySelector('.progress');
+  const text = progress.querySelector('.text');
 
   function prog(frac) {
-    progress.style.width = frac * 100 + '%';
+    const p = frac * 100;
+    text.textContent = p.toFixed(1) + '%';
+    progress.style.width = p + '%';
   }
 
   form.addEventListener('submit', (event) => {

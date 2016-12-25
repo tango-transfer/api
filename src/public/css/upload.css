@@ -9,15 +9,22 @@ body {
   position: absolute;
     left: 0;
     right: 0;
-  transform: translateY(-2.5em);
+  transform: translateY(-2.1em);
 }
 
 .upload .progress {
-  background: linear-gradient(to right,
-    #e587b5,
-    #ff1a8a 80%);
+  background: #00eed2;
   border-radius: 0 3px 3px 0;
-  height: 7px;
+  height: 9px;
+  position: relative;
   transition: .2s width ease;
+  width: 0;
+}
+
+.upload .progress .text {
+  font-size: 20px;
+  margin-top: -0.2em;
+  position: absolute;
+    right: -0.3em;
   width: 0;
 }
