@@ -10,8 +10,10 @@ body {
 }
 
 .info {
+  color: #bfbfbf;
+  font-size: 12px;
   margin: 1em;
-  max-width: 32em;
+  max-width: 42em;
 }
 
 .requests {
