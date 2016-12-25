@@ -12,7 +12,8 @@
         id: req.id,
         secret: parent.secret,
       });
-      parent.element.removeChild(item);
+
+      item.classList.add('allowed');
     });
 
     item.querySelector('button[name=ignore]').addEventListener('click', () => {

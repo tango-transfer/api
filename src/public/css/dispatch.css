@@ -9,58 +9,72 @@ body {
   text-align: center;
 }
 
+.info {
+  margin: 1em;
+  max-width: 32em;
+}
+
 .requests {
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;
   min-width: 400px;
-  max-width: 500px;
 }
 
-.requests .request {
-  background: #ff1a8a;
-  margin: 1em;
-  text-align: center;
-}
+  .requests .request {
+    background: #ff1a8a;
+    margin: 1em;
+    text-align: center;
+  }
 
-.requests .request .signature {
-  color: #fff;
-  font-size: 48px;
-  font-weight: bold;
-  margin: .7em 1em;
-}
+    .requests .request.allowed {
+      background: #6effab;
+    }
 
-.requests .request .buttons {
-  font-size: inherit;
-  display: flex;
-  justify-content: space-between;
-  margin: 1em;
-}
+      .requests .request.allowed button {
+        cursor: pointer;
+        opacity: .2;
+        pointer-events: none;
+      }
 
-.requests .request button {
-  border: 0;
-  background: #000;
-  color: #fff;
-  cursor: pointer;
-  font-size: 18px;
-  padding: .7em 1.2em;
-  text-transform: uppercase;
-}
+    .requests .request .signature {
+      color: #fff;
+      font-size: 48px;
+      font-weight: bold;
+      margin: .7em 1em;
+    }
 
-.requests .request button[name="ignore"] {
-  order: 1;
-}
+    .requests .request .buttons {
+      font-size: inherit;
+      display: flex;
+      justify-content: space-between;
+      margin: 1em;
+    }
 
-.requests .request button[name='allow'] {
-  order: 2;
-}
+    .requests .request button {
+      border: 0;
+      background: #000;
+      color: #fff;
+      cursor: pointer;
+      font-size: 18px;
+      padding: .7em 1.2em;
+      text-transform: uppercase;
+    }
+
+      .requests .request button[name="ignore"] {
+        order: 1;
+      }
+
+      .requests .request button[name='allow'] {
+        order: 2;
+      }
 
 .link {
   font-weight: 200;
   letter-spacing: .075em;
 }
 
-.link .public {
-  color: #ff1a8a;
-  font-weight: normal;
-  text-decoration: none;
-}
+  .link .public {
+    color: #ff1a8a;
+    font-weight: normal;
+    text-decoration: none;
+  }
