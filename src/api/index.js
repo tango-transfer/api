@@ -39,8 +39,8 @@ module.exports = function api(app, coord) {
   router.get('/file/:id/download', (req, res) => {
     coord.request(req.params.id, req.query.sign).then(({meta, stream}) => {
       res.setHeader('Content-Length', meta.size);
-      res.setHeader('Content-Type', 'application/octet-stream');
-      res.setHeader('Content-disposition', `filename="${meta.name}"`);
+      res.setHeader('Content-Type', meta.mime);
+      res.setHeader('Content-Disposition', `attachment; filename="${meta.name}"`);
       stream.pipe(res);
     }).catch(err => {
       console.error(err.message);
