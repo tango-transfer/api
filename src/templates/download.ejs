@@ -8,7 +8,7 @@
   <section class="download">
     <h1>Download File</h1>
 
-    <form action="/api/v1/blob/<%= fileId %>" method="GET">
+    <form action="/file/<%= fileId %>/download" method="GET">
       <input type="text" name="sign" value="<%= sign %>" />
       <button type="submit">Request</button>
     </form>

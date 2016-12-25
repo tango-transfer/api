@@ -1,10 +1,42 @@
 const express = require('express');
 const busboy = require('connect-busboy');
+const random = require('../random');
 
-module.exports = function api(coord) {
+module.exports = function api(app, coord) {
+  app.set('views', './templates');
+  app.set('view engine', 'ejs');
+
   const router = express.Router();
 
-  router.get('/v1/blob/:id', (req, res) => {
+  router.get('/', (req, res) => {
+    res.setHeader('Location', '/upload');
+    res.statusCode = 302;
+    res.end();
+  });
+
+  router.get('/upload', (req, res) => {
+    res.render('upload');
+  });
+
+  router.get('/dispatch/:id/:secret', (req, res) => {
+    res.locals = {
+      filename: req.query.name,
+      receipt: req.params,
+    };
+
+    res.render('dispatch');
+  });
+
+  router.get('/file/:id/request', (req, res) => {
+    res.locals = {
+      sign: random.pretty(5),
+      fileId: req.params.id,
+    };
+
+    res.render('download');
+  });
+
+  router.get('/file/:id/download', (req, res) => {
     coord.request(req.params.id, req.query.sign).then(({meta, stream}) => {
       res.setHeader('Content-Length', meta.size);
       res.setHeader('Content-Type', 'application/octet-stream');
@@ -17,7 +49,7 @@ module.exports = function api(coord) {
     });
   });
 
-  router.post('/v1/blob', busboy(), (req, res) => {
+  router.post('/file', busboy(), (req, res) => {
     if (req.busboy) {
       req.busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
         const store = coord.store;
@@ -27,6 +59,11 @@ module.exports = function api(coord) {
       });
       req.pipe(req.busboy);
     }
+  });
+
+  router.use((req, res) => {
+    res.statusCode = 404;
+    res.render('404');
   });
 
   return router;
