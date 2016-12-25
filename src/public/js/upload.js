@@ -1,13 +1,6 @@
 (function() {
   const form = document.querySelector('#upload');
-  const progress = document.querySelector('.progress');
-  const text = progress.querySelector('.text');
-
-  function prog(frac) {
-    const p = frac * 100;
-    text.textContent = p.toFixed(1) + '%';
-    progress.style.width = p + '%';
-  }
+  const prog = TFA.progress(document.querySelector('.progress-bar'));
 
   form.addEventListener('submit', (event) => {
     event.preventDefault();

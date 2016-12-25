@@ -37,15 +37,18 @@ module.exports = function api(app, coord) {
   });
 
   router.get('/file/:id/download', (req, res) => {
-    coord.request(req.params.id, req.query.sign).then(({meta, stream}) => {
+    const id = req.params.id;
+    coord.request(id, req.query.sign).then(({meta, stream}) => {
       res.setHeader('Content-Length', meta.size);
       res.setHeader('Content-Type', meta.mime);
       res.setHeader('Content-Disposition', `attachment; filename="${meta.name}"`);
+      res.setHeader('X-Filename', meta.name);
       stream.pipe(res);
     }).catch(err => {
       console.error(err.message);
       res.statusCode = 404;
-      res.render('404');
+      res.setHeader('Location', `/file/${id}/declined`);
+      res.end();
     });
   });
 

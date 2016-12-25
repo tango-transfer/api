@@ -1,61 +1,60 @@
-body {
-  justify-content: center;
-}
-
-.download {
-  height: 300px;
-  width: 620px;
-  perspective: 500px;
-}
-
-.download input[name=sign] {
-  border: 0;
-  border-bottom: solid 1px black;
-  font-size: 24px;
-  letter-spacing: .2em;
-  margin: 1em 1em 1em 0;
-  padding: .3em;
-  width: 16em;
-}
-
-.download.requested h1 {
-  text-align: center;
-}
-
-.download.requested form {
-  display: none;
-}
-
-.download .wait {
-  display: none;
-  margin-top: -3.5em;
-}
-
-.download .wait p {
-  font-size: 1.5em;
-  text-align: center;
-}
-
-.download.requested .wait {
-  display: block;
-}
-
-.download .wait .signature {
-  font-size: larger;
-  font-weight: bold;
-  letter-spacing: 0.1em;
-}
-
 @keyframes rotate {
   0% { transform: rotateZ(0deg); }
   100% { transform: rotateZ(360deg); }
 }
 
-.download .spinner {
-  animation: rotate 3s infinite linear;
-  background: url('/img/refresh.svg') no-repeat;
-  background-size: contain;
-  margin: auto;
-  height: 140px;
-  width: 140px;
+body {
+  justify-content: center;
 }
+
+.step {
+  display: none;
+}
+
+.requesting .step.request {
+  display: block;
+}
+
+.waiting .step.wait {
+  display: block;
+}
+
+.downloading .step.download {
+  display: block;
+}
+
+.ready .step.ready {
+  display: block;
+}
+
+  .download .request input[name=sign] {
+    border: 0;
+    border-bottom: solid 1px black;
+    font-size: 24px;
+    letter-spacing: .2em;
+    margin: 1em 1em 1em 0;
+    padding: .3em;
+    width: 16em;
+  }
+
+  .download .wait {
+    text-align: center;
+  }
+
+    .download .pacifier {
+      animation: rotate 3s infinite linear;
+    }
+
+    .download .wait p {
+      font-size: 1.5em;
+      text-align: center;
+    }
+
+    .download .wait .signature {
+      font-size: larger;
+      font-weight: bold;
+      letter-spacing: 0.1em;
+    }
+
+
+

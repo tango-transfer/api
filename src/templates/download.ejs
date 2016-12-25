@@ -3,19 +3,44 @@
   <title>Download File - 2FA Transmit</title>
   <link href="/css/2fa-transmit.css" rel="stylesheet" />
   <link href="/css/download.css" rel="stylesheet" />
+  <script src="/js/2fa-transmit.js"></script>
 </head>
 <body>
   <section class="download">
-    <h1>Download File</h1>
 
-    <form action="/file/<%= fileId %>/download" method="GET">
-      <input type="text" name="sign" value="<%= sign %>" />
-      <button type="submit">Request</button>
-    </form>
+    <div class="step request">
+      <h1>Download File</h1>
 
-    <div class="wait">
-      <div class="spinner"></div>
+      <form action="/file/<%= fileId %>/download" method="GET">
+        <input type="text" name="sign" value="<%= sign %>" />
+        <button type="submit">Request</button>
+      </form>
+    </div>
+
+    <div class="step wait">
+      <h1>Hold on</h1>
+      <img src="/img/refresh.svg" height="120" class="pacifier">
       <p>Requesting as <span class="signature">xxxx</span></p>
+    </div>
+
+    <div class="step download">
+      <h1>Downloading</h1>
+
+      <div class="progress-bar">
+        <div class="progress">
+          <span class="text"></span>
+        </div>
+      </div>
+
+      <h3 class="filename"></h3>
+    </div>
+
+    <div class="step ready">
+      <h1>Ready</h1>
+
+      <h2 class="filename"></h2>
+
+      <a href=""><button>Get File</button></a>
     </div>
   </section>
 

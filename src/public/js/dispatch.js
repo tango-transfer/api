@@ -1,22 +1,4 @@
 (function() {
-  function countdown(from, onCount, onComplete) {
-    function stop() {
-      clearInterval(timer);
-    }
-
-    onCount(from);
-
-    const timer = setInterval(() => {
-      onCount(--from);
-      if (from <= 0) {
-        onComplete();
-        stop();
-      }
-    }, 1000);
-
-    return stop;
-  }
-
   function addRequest(parent, req) {
     const item = document
         .importNode(requestTemplate.content, true)
@@ -52,7 +34,7 @@
 
     parent.element.appendChild(item);
 
-    const stop = countdown(req.timeout, time, ignore);
+    const stop = TFA.countdown(req.timeout, time, ignore);
   }
 
   function send(data) {
