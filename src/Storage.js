@@ -1,8 +1,7 @@
 const fs = require('fs');
 const crypto = require('crypto');
-const uuid = require('uuid/v4');
-const random = require('./random');
 const file = require('./file');
+const random = require('./random');
 
 
 function decrypt(str, decipher) {
@@ -73,10 +72,10 @@ class Storage
   }
 
   store(file, meta) {
-    const id = uuid();
+    const id = random.pretty(8, random.ALPHANUM);
     const path = this.path(id);
 
-    const secret = random.bytes().toString('hex');
+    const secret = random.pretty(64, random.ALPHANUM);
 
     {
       const cipher = this.cipher(secret);

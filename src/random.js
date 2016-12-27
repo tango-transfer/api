@@ -1,5 +1,7 @@
 const crypto = require('crypto');
 
+const ALPHANUM = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
 function bytes(len = 32) {
   return crypto.randomBytes(len);
 }
@@ -18,6 +20,7 @@ function pretty(len = 6, chars = 'ABCDEFGHJKLMNOPQRSTUVWXYZ023456789') {
 }
 
 module.exports = {
+  ALPHANUM,
   bytes,
   pretty,
 }
