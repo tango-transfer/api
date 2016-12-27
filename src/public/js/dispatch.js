@@ -76,8 +76,18 @@
     }
   });
 
-  const link = document.querySelector('.link a');
-  link.textContent = link.href;
+  const link = document.querySelector('.link');
+  const anchor = link.querySelector('a');
+  const input = link.querySelector('input');
+  const button = link.querySelector('button');
+  anchor.textContent = anchor.href;
+
+  button.addEventListener('click', () => {
+    input.value = anchor.href;
+    input.select();
+    document.execCommand('cut');
+    input.blur();
+  });
 
   document.addEventListener('copy', function(event) {
     event.preventDefault();

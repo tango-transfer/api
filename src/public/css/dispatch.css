@@ -79,6 +79,8 @@ body {
       }
 
 .link {
+  align-items: center;
+  display: flex;
   font-weight: 200;
   letter-spacing: .075em;
 }
@@ -87,4 +89,14 @@ body {
     color: #ff1a8a;
     font-weight: normal;
     text-decoration: none;
+  }
+
+  .link button {
+    font-size: 12px;
+    margin-left: 1em;
+  }
+
+  .link input {
+    position: absolute;
+    top: -20px;
   }
