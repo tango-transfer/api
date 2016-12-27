@@ -27,7 +27,7 @@ module.exports = function api(app, coord) {
     res.render('dispatch');
   });
 
-  router.get('/file/:id/request', (req, res) => {
+  router.get('/file/:id', (req, res) => {
     res.locals = {
       sign: random.pretty(5),
       fileId: req.params.id,
