@@ -23,6 +23,10 @@ button {
   text-transform: uppercase;
 }
 
+button:active {
+  background: #ff1a8a;
+}
+
 input {
   font-size: 18px;
   outline: none;
