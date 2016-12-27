@@ -73,8 +73,12 @@
     }
   });
 
-  [...document.querySelectorAll('.link a')].forEach(anchor => {
-    anchor.textContent = anchor.href;
+  const link = document.querySelector('.link a');
+  link.textContent = link.href;
+
+  document.addEventListener('copy', function(event) {
+    event.preventDefault();
+    event.clipboardData.setData('text/plain', link.href);
   });
 
   const requests = document.querySelectorAll('.requests');
