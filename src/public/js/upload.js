@@ -27,10 +27,9 @@
     });
 
     XHR.addEventListener('load', function() {
-      prog(1);
       const {id, secret} = JSON.parse(this.responseText);
-      const url = `/dispatch/${id}/${secret}?name=` + encodeURIComponent(filename);
-
+      const url = `/dispatch/${id}?name=` + encodeURIComponent(filename);
+      localStorage.setItem(id, secret);
       window.location = url;
     });
 

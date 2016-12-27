@@ -12,7 +12,7 @@
       send({
         type: 'ALLOW',
         id: req.id,
-        secret: parent.secret,
+        secret: getSecret(req.id),
       });
 
       stop();
@@ -37,6 +37,10 @@
     const stop = TFA.countdown(req.timeout, time, ignore);
   }
 
+  function getSecret(id) {
+    return localStorage.getItem(id);
+  }
+
   function send(data) {
     const msg = JSON.stringify(data);
     conn.send(msg);
@@ -48,17 +52,16 @@
 
   conn.addEventListener('open', () => {
     [...requests].forEach(element => {
-      const receipt = JSON.parse(element.getAttribute('data-receipt'));
+      const id = element.getAttribute('data-id');
 
-      incoming.set(receipt.id, {
+      incoming.set(id, {
         element,
-        secret: receipt.secret,
       });
 
       send({
         type: 'CLAIM',
-        id: receipt.id,
-        secret: receipt.secret,
+        id: id,
+        secret: getSecret(id),
       });
     });
   });

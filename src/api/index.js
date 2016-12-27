@@ -18,10 +18,10 @@ module.exports = function api(app, coord) {
     res.render('upload');
   });
 
-  router.get('/dispatch/:id/:secret', (req, res) => {
+  router.get('/dispatch/:id', (req, res) => {
     res.locals = {
       filename: req.query.name,
-      receipt: req.params,
+      id: req.params.id,
     };
 
     res.render('dispatch');

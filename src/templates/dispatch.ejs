@@ -13,7 +13,7 @@
 
   <section class="link">
     Shareable Link
-    <a class="public" href="/file/<%= receipt.id %>" target="_blank"></a>
+    <a class="public" href="/file/<%= id %>" target="_blank"></a>
   </section>
 
   <section class="info">
@@ -32,7 +32,7 @@
     </div>
   </template>
 
-  <div class="requests" data-receipt="<%= JSON.stringify(receipt) %>">
+  <div class="requests" data-id="<%= id %>">
   </div>
 
   <script src="/js/dispatch.js"></script>
