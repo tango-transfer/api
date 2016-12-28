@@ -6,8 +6,8 @@
     const XHR = new XMLHttpRequest();
     XHR.open('POST', url, true);
 
-    XHR.addEventListener('error', function(e) {
-      console.error(e);
+    XHR.addEventListener('error', function(err) {
+      console.error(err);
     });
 
     XHR.upload.addEventListener('progress', function(e) {
@@ -24,23 +24,28 @@
     XHR.send(body);
   }
 
+  function handleFiles(files) {
+    if (files.length === 0) {
+      return;
+    }
+    sendFile(files[0]);
+  }
+
   const form = document.querySelector('#upload');
   const url = form.action;
   const prog = TFA.progress(document.querySelector('.progress-bar'));
 
+  document.addEventListener('dragover', (event) => {
+    event.preventDefault();
+  });
+
   document.addEventListener('drop', (event) => {
     event.preventDefault();
-    console.log(event);
-  }, false);
+    handleFiles(event.dataTransfer.files);
+  });
 
   form.addEventListener('submit', (event) => {
     event.preventDefault();
-
-    const form = event.target;
-    if (!form.file.files.length) {
-      return;
-    }
-
-    sendFile(form.file.files[0]);
+    handleFiles(form.file.files);
   });
 }());
