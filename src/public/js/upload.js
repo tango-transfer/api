@@ -40,6 +40,7 @@
   }
 
   const form = document.querySelector('#upload');
+  form.reset();
   const url = form.action;
   const prog = TFA.progress(document.querySelector('.progress-bar'));
   const browse = form.querySelector('button[name=browse]');
@@ -61,4 +62,11 @@
     event.preventDefault();
     handleFiles(form.file.files);
   });
+
+  const timer = setInterval(() => {
+    if (form.file.files.length) {
+      clearInterval(timer);
+      handleFiles(form.file.files);
+    }
+  }, 500);
 }());
