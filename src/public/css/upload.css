@@ -3,4 +3,6 @@ body {
 }
 
 .upload input[type=file] {
+  position: absolute;
+  visibility: hidden;
 }

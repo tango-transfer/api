@@ -34,6 +34,11 @@
   const form = document.querySelector('#upload');
   const url = form.action;
   const prog = TFA.progress(document.querySelector('.progress-bar'));
+  const browse = form.querySelector('button[name=browse]');
+
+  browse.addEventListener('click', () => {
+    form.file.click();
+  });
 
   document.addEventListener('dragover', (event) => {
     event.preventDefault();
