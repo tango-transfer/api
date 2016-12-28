@@ -1,19 +1,7 @@
 (function() {
-  const form = document.querySelector('#upload');
-  const prog = TFA.progress(document.querySelector('.progress-bar'));
-
-  form.addEventListener('submit', (event) => {
-    event.preventDefault();
-    const form = event.target;
-
-    const url = form.action;
-    const body = new FormData(form);
-
-    if (!form.file.value) {
-      return;
-    }
-
-    const filename = form.file.value.split(/(\\|\/)/g).pop();
+  function sendFile(file) {
+    const body = new FormData();
+    body.append('file', file);
 
     const XHR = new XMLHttpRequest();
     XHR.open('POST', url, true);
@@ -28,11 +16,31 @@
 
     XHR.addEventListener('load', function() {
       const {id, secret} = JSON.parse(this.responseText);
-      const url = `/dispatch/${id}?name=` + encodeURIComponent(filename);
+      const url = `/dispatch/${id}?name=` + encodeURIComponent(file.name);
       localStorage.setItem(id, secret);
       window.location = url;
     });
 
     XHR.send(body);
+  }
+
+  const form = document.querySelector('#upload');
+  const url = form.action;
+  const prog = TFA.progress(document.querySelector('.progress-bar'));
+
+  document.addEventListener('drop', (event) => {
+    event.preventDefault();
+    console.log(event);
+  }, false);
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    const form = event.target;
+    if (!form.file.files.length) {
+      return;
+    }
+
+    sendFile(form.file.files[0]);
   });
 }());
