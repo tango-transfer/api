@@ -1,5 +1,13 @@
 (function() {
+  let ready = true;
+
   function sendFile(file) {
+    if (!ready) {
+      console.info('Not ready');
+      return;
+    }
+    ready = false;
+
     const body = new FormData();
     body.append('file', file);
 
