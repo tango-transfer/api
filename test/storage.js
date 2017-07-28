@@ -16,7 +16,7 @@ describe('Storage', () => {
       let storePromise, receipt;
 
       beforeEach(() => {
-        file = fs.createReadStream('./test/fixture/image.png', 'binary');
+        file = fs.createReadStream('./test/fixture/image.png');
         storePromise = storage.store(file, {
           mime: 'image/png',
           filename: 'other_filename.png',
