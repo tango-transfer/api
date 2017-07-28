@@ -62,19 +62,35 @@ class Storage
     const id = this.createId();
     const secret = this.createSecret();
 
-    {
-      let size = 0;
-      file.on('data', data => {size += data.length});
-      file.on('end', () => {
-        meta.size = size;
-        this.putMeta(meta, id + '.meta', secret);
+    return new Promise(resolve => {
+      const blobStream = new Promise(resolve => {
+        const stream = this.storeStream(file, id, secret);
+        resolve(stream);
       });
-    }
 
-    const stream = this.storeStream(file, id, secret);
+      const metaStream = new Promise(resolve => {
+        let size = 0;
+        file.on('data', data => {size += data.length});
+        file.on('end', () => {
+          meta.size = size;
+          const stream = this.putMeta(meta, id + '.meta', secret);
+          resolve(stream);
+        });
+      });
 
-    return new Promise(res => {
-      res({id, secret, stream});
+      const streams = [
+        blobStream,
+        metaStream,
+      ];
+
+      streams.blob = blobStream;
+      streams.meta = metaStream;
+
+      resolve({
+        id,
+        secret,
+        streams,
+      });
     });
   }
 

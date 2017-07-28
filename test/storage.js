@@ -9,6 +9,7 @@ const DiskStorageAdapter = require('../src/storage/Disk');
 const CloudStorageAdapter = require('../src/storage/GoogleCloud');
 
 describe('Storage', () => {
+  const MOCK_ID = 'Aa12xea2';
   let storage;
 
   function testStoreAndRetrieve() {
@@ -24,9 +25,11 @@ describe('Storage', () => {
         });
 
         storePromise.then(receipt => {
-          receipt.stream.on('finish', () => {
-            // Done writing file.
-            done();
+          receipt.streams.meta.then(stream => {
+            stream.on('finish', () => {
+              // Done writing file.
+              done();
+            });
           });
         });
       });
@@ -44,15 +47,15 @@ describe('Storage', () => {
 
         describe('receipt', () => {
           it('contains file id', () => {
-            expect(receipt.id.length).to.be(8);
+            expect(receipt.id).to.equal(MOCK_ID);
           });
 
           it('contains secret', () => {
             expect(receipt.secret.length).to.be(64);
           });
 
-          it('contains stream', () => {
-            expect(receipt.stream).to.be.ok();
+          it('contains streams', () => {
+            expect(receipt.streams).to.be.ok();
           });
         });
       });
@@ -94,6 +97,7 @@ describe('Storage', () => {
   describe('Local Disk', () => {
     beforeEach(() => {
       storage = new Storage(new DiskStorageAdapter('/tmp'));
+      sinon.stub(storage, 'createId').callsFake(() => MOCK_ID);
     });
 
     describe('Store and Retrieve', testStoreAndRetrieve);
