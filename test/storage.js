@@ -81,7 +81,7 @@ describe('Storage', () => {
     describe('when storing file to disk', testStoreAndRetrieve);
   });
 
-  describe('Google Cloud Storage', () => {
+  describe.skip('Google Cloud Storage', () => {
     beforeEach(() => {
       storage = new CloudStorage('/tmp');
     });

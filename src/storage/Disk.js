@@ -1,5 +1,6 @@
 const fs = require('fs');
 const file = require('./file');
+const {Readable} = require('stream');
 const BaseStorageAdapter = require('../Storage');
 
 class DiskStorageAdapter extends BaseStorageAdapter
@@ -14,22 +15,26 @@ class DiskStorageAdapter extends BaseStorageAdapter
   }
 
   getMeta(path, secret) {
-    return file.read(path)
-    .then(buffer => {
-      const encrypted = buffer.toString();
+    return new Promise(resolve => {
+      const input = fs.createReadStream(path);
       const decipher = this.decipher(secret);
-      const json = this.decrypt(encrypted, decipher);
-      return JSON.parse(json);
+      const string = input.pipe(decipher);
+      let json = '';
+      string.on('data', buffer => json += buffer.toString());
+      string.on('end', () => {
+        resolve(JSON.parse(json));
+      });
     });
   }
 
   putMeta(meta, path, secret) {
     const cipher = this.cipher(secret);
     const json = JSON.stringify(meta);
-    const data = this.encrypt(json, cipher);
-    const disk = fs.createWriteStream(path);
-    disk.write(data);
-    disk.end();
+    const readable = new Readable();
+    const stream = fs.createWriteStream(path);
+    readable.pipe(cipher).pipe(stream);
+    readable.push(Buffer.from(json));
+    readable.push(null);
   }
 
   retrieve(id, secret) {
@@ -37,10 +42,10 @@ class DiskStorageAdapter extends BaseStorageAdapter
     return this.getMeta(path + '.meta', secret)
     .then(meta => {
       const decipher = this.decipher(secret);
-      const file = fs.createReadStream(path);
+      const stream = fs.createReadStream(path);
       return {
         meta,
-        stream: file.pipe(decipher),
+        stream: stream.pipe(decipher),
       }
     });
   }
@@ -61,8 +66,8 @@ class DiskStorageAdapter extends BaseStorageAdapter
 
     {
       const cipher = this.cipher(secret);
-      const output = fs.createWriteStream(path);
-      file.pipe(cipher).pipe(output);
+      const stream = fs.createWriteStream(path);
+      file.pipe(cipher).pipe(stream);
     }
 
     return new Promise(res => {
