@@ -97,7 +97,7 @@ class Storage
   }
 
   check(id, secret) {
-    return this.meta(id, secret)
+    return this.getMeta(id, secret)
     .then(() => true)
     .catch(() => false);
   }
