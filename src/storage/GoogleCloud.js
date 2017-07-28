@@ -16,7 +16,6 @@ class GoogleCloudAdapter
 
   putStream(input, id) {
     const output = this.getFile(id).createWriteStream();
-    console.log(output);
     return input.pipe(output);
   }
 }
