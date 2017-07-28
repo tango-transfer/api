@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 
 class DiskStorageAdapter
 {
@@ -7,7 +8,7 @@ class DiskStorageAdapter
   }
 
   getPath(id) {
-    return this.dir + '/' + id;
+    return path.join(this.dir, id);
   }
 
   getStream(id) {
