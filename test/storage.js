@@ -26,7 +26,7 @@ describe('Storage', () => {
 
         storePromise.then(receipt => {
           receipt.streams.meta.then(stream => {
-            stream.on('finish', () => {
+            stream.on('close', () => {
               // Done writing file.
               done();
             });
@@ -39,13 +39,19 @@ describe('Storage', () => {
       });
 
       describe('when resolved', () => {
+        let receipt;
+
         beforeEach(() => {
           return storePromise.then(response => {
             receipt = response;
           });
         });
 
-        describe('receipt', () => {
+        it('contains a receipt', () => {
+          expect(receipt).to.be.an(Object);
+        });
+
+        describe('Receipt', () => {
           it('contains file id', () => {
             expect(receipt.id).to.equal(MOCK_ID);
           });
@@ -57,36 +63,54 @@ describe('Storage', () => {
           it('contains streams', () => {
             expect(receipt.streams).to.be.ok();
           });
-        });
-      });
 
-      context('then retreiving file using receipt id', () => {
-        let retreivePromise;
+          describe('when used to retreive file', () => {
+            let retreivePromise;
 
-        beforeEach(() => {
-          retreivePromise = storage.retrieve(receipt.id, receipt.secret);
-        });
+            beforeEach(() => {
+              retreivePromise = storage.retrieve(receipt.id, receipt.secret);
+            });
 
-        it('returns a Promise', () => {
-          expect(retreivePromise).to.be.a(Promise);
-        });
+            it('returns a Promise', () => {
+              expect(retreivePromise).to.be.a(Promise);
+            });
 
-        describe('when resolved', () => {
-          let result;
+            describe('when resolved', () => {
+              let result;
 
-          beforeEach(() => {
-            return retreivePromise.then(_r => {result = _r});
-          });
+              beforeEach(() => {
+                return retreivePromise.then(_r => {result = _r});
+              });
 
-          it('contains meta', () => {
-            expect(result.meta.mime).to.equal('image/png');
-            expect(result.meta.filename).to.equal('other_filename.png');
-            expect(result.meta.size).to.equal(159021);
-          });
+              it('contains meta', () => {
+                expect(result.meta).to.be.an(Object);
+              });
 
-          it('contains stream with expected data', () => {
-            return hash(result.stream, 'sha1').then(digest => {
-              expect(digest).to.be('8f4e8178e595b15c062e2d6d1bc9cb25d1101a97');
+              describe('Meta', () => {
+                let meta;
+
+                beforeEach(() => {
+                  meta = result.meta;
+                });
+
+                it('has mime type', () => {
+                  expect(result.meta.mime).to.equal('image/png');
+                });
+
+                it('contains filename', () => {
+                  expect(result.meta.filename).to.equal('other_filename.png');
+                });
+
+                it('contains filesize', () => {
+                  expect(result.meta.size).to.equal(159021);
+                });
+              });
+
+              it('contains stream with expected data', () => {
+                return hash(result.stream, 'sha1').then(digest => {
+                  expect(digest).to.be('8f4e8178e595b15c062e2d6d1bc9cb25d1101a97');
+                });
+              });
             });
           });
         });
