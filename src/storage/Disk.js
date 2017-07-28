@@ -6,16 +6,16 @@ class DiskStorageAdapter
     this.dir = dir;
   }
 
-  path(id) {
+  getPath(id) {
     return this.dir + '/' + id;
   }
 
   getStream(id) {
-    return fs.createReadStream(this.path(id));
+    return fs.createReadStream(this.getPath(id));
   }
 
   putStream(input, id) {
-    const output = fs.createWriteStream(this.path(id));
+    const output = fs.createWriteStream(this.getPath(id));
     return input.pipe(output);
   }
 }
