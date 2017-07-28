@@ -15,11 +15,19 @@ describe('Storage', () => {
     describe('when storing file', () => {
       let storePromise, receipt;
 
-      beforeEach(() => {
+      beforeEach(done => {
+        // Start writing file.
         file = fs.createReadStream('./test/fixture/image.png');
         storePromise = storage.store(file, {
           mime: 'image/png',
           filename: 'other_filename.png',
+        });
+
+        storePromise.then(receipt => {
+          receipt.stream.on('finish', () => {
+            // Done writing file.
+            done();
+          });
         });
       });
 
@@ -29,7 +37,9 @@ describe('Storage', () => {
 
       describe('when resolved', () => {
         beforeEach(() => {
-          return storePromise.then(response => {receipt = response});
+          return storePromise.then(response => {
+            receipt = response;
+          });
         });
 
         describe('receipt', () => {
@@ -39,6 +49,10 @@ describe('Storage', () => {
 
           it('contains secret', () => {
             expect(receipt.secret.length).to.be(64);
+          });
+
+          it('contains stream', () => {
+            expect(receipt.stream).to.be.ok();
           });
         });
       });
