@@ -9,7 +9,7 @@ class Coordinator {
 
   claim(id, secret, client) {
     console.info('Trying to claim %s', id);
-    return this.store.check(id, secret)
+    return this.store.verify(id, secret)
     .then(isValid => {
       if (!isValid) {
         console.info('Claim %s invalid', id);

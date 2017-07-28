@@ -27,19 +27,19 @@ class Storage
   }
 
   getMeta(id, secret) {
-    return consume(this.readStream(id, secret))
+    return consume(this.readStream(id + '.meta', secret))
     .then(json => JSON.parse(json));
   }
 
   putMeta(meta, id, secret) {
     const readable = new Readable();
-    readable.push(Buffer.from(JSON.stringify(meta)));
+    readable.push(JSON.stringify(meta));
     readable.push(null);
-    return this.storeStream(readable, id, secret);
+    return this.storeStream(readable, id + '.meta', secret);
   }
 
   retrieve(id, secret) {
-    return this.getMeta(id + '.meta', secret)
+    return this.getMeta(id, secret)
     .then(meta => {
       return {
         meta,
@@ -50,12 +50,12 @@ class Storage
 
   readStream(id, secret) {
     const decipher = this.decipher(secret);
-    return this.adapter.getStream(id).pipe(decipher);
+    return this.adapter.getStream(id);//.pipe(decipher);
   }
 
   storeStream(input, id, secret) {
     const cipher = this.cipher(secret);
-    return this.adapter.putStream(input.pipe(cipher), id);
+    return this.adapter.putStream(input, id);
   }
 
   store(file, meta) {
@@ -75,7 +75,7 @@ class Storage
         });
         file.on('end', () => {
           meta.size = size;
-          const stream = this.putMeta(meta, id + '.meta', secret);
+          const stream = this.putMeta(meta, id, secret);
           resolve(stream);
         });
       });
@@ -96,10 +96,13 @@ class Storage
     });
   }
 
-  check(id, secret) {
+  verify(id, secret) {
     return this.getMeta(id, secret)
     .then(() => true)
-    .catch(() => false);
+    .catch(err => {
+      console.error('Verify for claim %s failed', id, err);
+      return false;
+    });
   }
 }
 

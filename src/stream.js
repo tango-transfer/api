@@ -1,8 +1,8 @@
-function consume(stream) {
+function consume(stream, enc = 'utf8') {
   return new Promise(resolve => {
     let data = '';
     stream.on('data', buffer => {
-      data += buffer.toString();
+      data += buffer.toString(enc);
     });
     stream.on('end', () => {
       resolve(data);
