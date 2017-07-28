@@ -71,10 +71,10 @@ class Storage
       });
     }
 
-    this.storeStream(file, id, secret);
+    const stream = this.storeStream(file, id, secret);
 
     return new Promise(res => {
-      res({id, secret});
+      res({id, secret, stream});
     });
   }
 
