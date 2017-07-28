@@ -13,9 +13,8 @@ class DiskStorageAdapter extends BaseStorageAdapter
     return this.dir + '/' + id;
   }
 
-  meta(id, secret) {
-    const path = this.path(id);
-    return file.read(path + '.meta')
+  getMeta(path, secret) {
+    return file.read(path)
     .then(buffer => {
       const encrypted = buffer.toString();
       const decipher = this.decipher(secret);
@@ -24,11 +23,20 @@ class DiskStorageAdapter extends BaseStorageAdapter
     });
   }
 
+  putMeta(meta, path, secret) {
+    const cipher = this.cipher(secret);
+    const json = JSON.stringify(meta);
+    const data = this.encrypt(json, cipher);
+    const disk = fs.createWriteStream(path);
+    disk.write(data);
+    disk.end();
+  }
+
   retrieve(id, secret) {
-    return this.meta(id, secret)
+    const path = this.path(id);
+    return this.getMeta(path + '.meta', secret)
     .then(meta => {
       const decipher = this.decipher(secret);
-      const path = this.path(id);
       const file = fs.createReadStream(path);
       return {
         meta,
@@ -47,12 +55,7 @@ class DiskStorageAdapter extends BaseStorageAdapter
       file.on('data', data => {size += data.length});
       file.on('end', () => {
         meta.size = size;
-        const cipher = this.cipher(secret);
-        const json = JSON.stringify(meta);
-        const data = this.encrypt(json, cipher);
-        const disk = fs.createWriteStream(path + '.meta');
-        disk.write(data);
-        disk.end();
+        this.putMeta(meta, path + '.meta', secret);
       });
     }
 
