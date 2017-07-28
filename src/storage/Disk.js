@@ -21,11 +21,6 @@ class DiskStorageAdapter extends BaseStorageAdapter
       const decipher = this.decipher(secret);
       const json = this.decrypt(encrypted, decipher);
       return JSON.parse(json);
-    })
-    .then(meta => {
-      const stats = fs.statSync(path);
-      meta.size = stats.size;
-      return meta;
     });
   }
 
