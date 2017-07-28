@@ -67,10 +67,10 @@ describe('Storage', () => {
             expect(result.meta.size).to.equal(159021);
           });
 
-          it('contains stream with expected data', (done) => {
-            hash(result.stream, 'sha1').then(digest => {
+          it('contains stream with expected data', () => {
+            return hash(result.stream, 'sha1').then(digest => {
               expect(digest).to.be('8f4e8178e595b15c062e2d6d1bc9cb25d1101a97');
-            }).then(done).catch(done);
+            });
           });
         });
       });
