@@ -11,7 +11,7 @@ class GoogleCloudAdapter
   }
 
   getStream(id) {
-    return this.getFile(id).createReadStream(i);
+    return this.getFile(id).createReadStream();
   }
 
   putStream(input, id) {

@@ -3,6 +3,9 @@ const https = require('https');
 const express = require('express');
 
 const Coordinator = require('./Coordinator');
+const GCS = require('@google-cloud/storage');
+const DiskAdapter = require('./storage/Disk');
+const GCSAdapter = require('./storage/GoogleCloud');
 const Storage = require('./Storage');
 
 const api = require('./api');
@@ -10,13 +13,23 @@ const ws = require('./ws');
 
 const config = require(process.env.CONFIG || './config.json');
 
+function createStore() {
+  return new Storage(new DiskAdapter(config.storage.dir));
+
+   const storage = GCS({
+    projectId: '141385452850',
+    keyFilename: 'pomle-com-1d6cb19c34cb.json',
+  });
+
+  const bucket = storage.bucket('pomle-com.appspot.com');
+  return new Storage(new GCSAdapter(bucket));
+}
+
 {
   const app = express();
   app.use('/', express.static('public'));
 
-  const store = new Storage();
-  store.dir = config.storage.dir || '/tmp';
-
+  const store = createStore();
   const coord = new Coordinator(store);
 
   app.use('/', api(app, coord));
