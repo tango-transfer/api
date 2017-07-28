@@ -63,8 +63,9 @@ describe('Storage', () => {
         });
 
         it('contains meta', () => {
-          expect(result.meta.mime).to.be('image/png');
-          expect(result.meta.filename).to.be('other_filename.png');
+          expect(result.meta.mime).to.equal('image/png');
+          expect(result.meta.filename).to.equal('other_filename.png');
+          expect(result.meta.size).to.equal(159021);
         });
 
         it('contains stream with expected data', (done) => {

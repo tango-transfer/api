@@ -78,12 +78,17 @@ class Storage
     const secret = random.pretty(64, random.ALPHANUM);
 
     {
-      const cipher = this.cipher(secret);
-      const json = JSON.stringify(meta);
-      const data = encrypt(json, cipher);
-      const disk = fs.createWriteStream(path + '.meta');
-      disk.write(data);
-      disk.end();
+      let size = 0;
+      file.on('data', data => {size += data.length});
+      file.on('end', () => {
+        meta.size = size;
+        const cipher = this.cipher(secret);
+        const json = JSON.stringify(meta);
+        const data = encrypt(json, cipher);
+        const disk = fs.createWriteStream(path + '.meta');
+        disk.write(data);
+        disk.end();
+      });
     }
 
     {
