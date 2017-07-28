@@ -1,18 +1,7 @@
 const fs = require('fs');
+const {consume} = require('./stream');
 const {Readable} = require('stream');
 const BaseStorageAdapter = require('../Storage');
-
-function consume(stream) {
-  return new Promise(resolve => {
-    let data = '';
-    stream.on('data', buffer => {
-      data += buffer.toString();
-    });
-    stream.on('end', () => {
-      resolve(data);
-    });
-  });
-}
 
 class DiskStorageAdapter extends BaseStorageAdapter
 {
