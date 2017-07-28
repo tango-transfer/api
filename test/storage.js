@@ -1,7 +1,7 @@
 const expect = require('expect.js');
+const sinon = require('sinon');
 
 const fs = require('fs');
-const GCS = require('@google-cloud/storage');
 
 const hash = require('../src/hash');
 const Storage = require('../src/Storage');
