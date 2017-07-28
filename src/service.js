@@ -14,9 +14,9 @@ const ws = require('./ws');
 const config = require(process.env.CONFIG || './config.json');
 
 function createStore() {
-  return new Storage(new DiskAdapter(config.storage.dir));
+  //return new Storage(new DiskAdapter(config.storage.dir));
 
-   const storage = GCS({
+  const storage = GCS({
     projectId: '141385452850',
     keyFilename: 'pomle-com-1d6cb19c34cb.json',
   });
