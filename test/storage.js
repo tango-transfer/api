@@ -3,17 +3,13 @@ const expect = require('expect.js');
 const fs = require('fs');
 
 const hash = require('../src/hash');
-const Storage = require('../src/Storage');
+const DiskStorage = require('../src/storage/Disk');
+const CloudStorage = require('../src/storage/GoogleCloud');
 
 describe('Storage', () => {
-  let storage, file;
+  let storage;
 
-  beforeEach(() => {
-    storage = new Storage();
-    storage.dir = '/tmp';
-  });
-
-  context('when storing file to disk', () => {
+  function testStoreAndRetrieve() {
     let storePromise, receipt;
 
     beforeEach(() => {
@@ -75,5 +71,21 @@ describe('Storage', () => {
         });
       });
     });
+  }
+
+  describe('Local Disk', () => {
+    beforeEach(() => {
+      storage = new DiskStorage('/tmp');
+    });
+
+    describe('when storing file to disk', testStoreAndRetrieve);
+  });
+
+  describe('Google Cloud Storage', () => {
+    beforeEach(() => {
+      storage = new CloudStorage('/tmp');
+    });
+
+    describe('when storing file to disk', testStoreAndRetrieve);
   });
 });
