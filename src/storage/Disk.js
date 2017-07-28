@@ -11,11 +11,13 @@ class DiskStorageAdapter
   }
 
   getStream(id) {
-    return fs.createReadStream(this.getPath(id));
+    const path = this.getPath(id);
+    return fs.createReadStream(path);
   }
 
   putStream(input, id) {
-    const output = fs.createWriteStream(this.getPath(id));
+    const path = this.getPath(id);
+    const output = fs.createWriteStream(path);
     return input.pipe(output);
   }
 }
