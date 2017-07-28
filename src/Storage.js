@@ -70,7 +70,9 @@ class Storage
 
       const metaStream = new Promise(resolve => {
         let size = 0;
-        file.on('data', data => {size += data.length});
+        file.on('data', data => {
+          size += data.length;
+        });
         file.on('end', () => {
           meta.size = size;
           const stream = this.putMeta(meta, id + '.meta', secret);
