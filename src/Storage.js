@@ -50,12 +50,12 @@ class Storage
 
   readStream(id, secret) {
     const decipher = this.decipher(secret);
-    return this.adapter.getStream(id);//.pipe(decipher);
+    return this.adapter.getStream(id).pipe(decipher);
   }
 
   storeStream(input, id, secret) {
     const cipher = this.cipher(secret);
-    return this.adapter.putStream(input, id);
+    return this.adapter.putStream(input.pipe(cipher), id);
   }
 
   store(file, meta) {
