@@ -1,12 +1,8 @@
 const fs = require('fs');
-const {consume} = require('./stream');
-const {Readable} = require('stream');
-const BaseStorageAdapter = require('../Storage');
 
-class DiskStorageAdapter extends BaseStorageAdapter
+class DiskStorageAdapter
 {
   constructor(dir) {
-    super();
     this.dir = dir;
   }
 
@@ -14,59 +10,13 @@ class DiskStorageAdapter extends BaseStorageAdapter
     return this.dir + '/' + id;
   }
 
-  readStream(path, secret) {
-    const decipher = this.decipher(secret);
-    return fs.createReadStream(path).pipe(decipher);
+  getStream(id) {
+    return fs.createReadStream(this.path(id));
   }
 
-  storeStream(input, path, secret) {
-    const cipher = this.cipher(secret);
-    const output = fs.createWriteStream(path);
-    return input.pipe(cipher).pipe(output);
-  }
-
-  getMeta(path, secret) {
-    return consume(this.readStream(path, secret))
-    .then(json => JSON.parse(json));
-  }
-
-  putMeta(meta, path, secret) {
-    const readable = new Readable();
-    readable.push(Buffer.from(JSON.stringify(meta)));
-    readable.push(null);
-    return this.storeStream(readable, path, secret);
-  }
-
-  retrieve(id, secret) {
-    const path = this.path(id);
-    return this.getMeta(path + '.meta', secret)
-    .then(meta => {
-      return {
-        meta,
-        stream: this.readStream(path, secret),
-      }
-    });
-  }
-
-  store(file, meta) {
-    const id = this.createId();
-    const secret = this.createSecret();
-    const path = this.path(id);
-
-    {
-      let size = 0;
-      file.on('data', data => {size += data.length});
-      file.on('end', () => {
-        meta.size = size;
-        this.putMeta(meta, path + '.meta', secret);
-      });
-    }
-
-    this.storeStream(file, path, secret);
-
-    return new Promise(res => {
-      res({id, secret});
-    });
+  putStream(input, id) {
+    const output = fs.createWriteStream(this.path(id));
+    return input.pipe(output);
   }
 }
 
