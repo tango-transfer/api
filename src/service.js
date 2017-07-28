@@ -1,5 +1,5 @@
 const fs = require('fs');
-const https = require('https');
+const http = require('http');
 const express = require('express');
 
 const Coordinator = require('./Coordinator');
@@ -39,12 +39,12 @@ function createStore() {
     cert: fs.readFileSync(config.https.cert),
   };
 
-  const server = https.createServer(options, app);
+  const server = http.createServer(app);
   app.server = server;
 
   ws(server, coord);
 
-  server.listen(config.https.port || 443);
+  server.listen(config.https.port || process.env.PORT || 8080);
   server.on('listening', () => {
       const bound = server.address();
       console.info(`HTTPS running on ${bound.address}:${bound.port}`);

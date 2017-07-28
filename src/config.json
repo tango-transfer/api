@@ -1,6 +1,6 @@
 {
   "https": {
-    "port": 8443,
+    "port": null,
     "key": "../cert/key.pem",
     "cert": "../cert/cert.pem"
   },
