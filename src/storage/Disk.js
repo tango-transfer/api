@@ -1,7 +1,18 @@
 const fs = require('fs');
-const file = require('./file');
 const {Readable} = require('stream');
 const BaseStorageAdapter = require('../Storage');
+
+function consume(stream) {
+  return new Promise(resolve => {
+    let data = '';
+    stream.on('data', buffer => {
+      data += buffer.toString();
+    });
+    stream.on('end', () => {
+      resolve(data);
+    });
+  });
+}
 
 class DiskStorageAdapter extends BaseStorageAdapter
 {
@@ -14,38 +25,36 @@ class DiskStorageAdapter extends BaseStorageAdapter
     return this.dir + '/' + id;
   }
 
+  readStream(path, secret) {
+    const decipher = this.decipher(secret);
+    return fs.createReadStream(path).pipe(decipher);
+  }
+
+  storeStream(input, path, secret) {
+    const cipher = this.cipher(secret);
+    const output = fs.createWriteStream(path);
+    return input.pipe(cipher).pipe(output);
+  }
+
   getMeta(path, secret) {
-    return new Promise(resolve => {
-      const input = fs.createReadStream(path);
-      const decipher = this.decipher(secret);
-      const string = input.pipe(decipher);
-      let json = '';
-      string.on('data', buffer => json += buffer.toString());
-      string.on('end', () => {
-        resolve(JSON.parse(json));
-      });
-    });
+    return consume(this.readStream(path, secret))
+    .then(json => JSON.parse(json));
   }
 
   putMeta(meta, path, secret) {
-    const cipher = this.cipher(secret);
-    const json = JSON.stringify(meta);
     const readable = new Readable();
-    const stream = fs.createWriteStream(path);
-    readable.pipe(cipher).pipe(stream);
-    readable.push(Buffer.from(json));
+    readable.push(Buffer.from(JSON.stringify(meta)));
     readable.push(null);
+    return this.storeStream(readable, path, secret);
   }
 
   retrieve(id, secret) {
     const path = this.path(id);
     return this.getMeta(path + '.meta', secret)
     .then(meta => {
-      const decipher = this.decipher(secret);
-      const stream = fs.createReadStream(path);
       return {
         meta,
-        stream: stream.pipe(decipher),
+        stream: this.readStream(path, secret),
       }
     });
   }
@@ -64,11 +73,7 @@ class DiskStorageAdapter extends BaseStorageAdapter
       });
     }
 
-    {
-      const cipher = this.cipher(secret);
-      const stream = fs.createWriteStream(path);
-      file.pipe(cipher).pipe(stream);
-    }
+    this.storeStream(file, path, secret);
 
     return new Promise(res => {
       res({id, secret});
