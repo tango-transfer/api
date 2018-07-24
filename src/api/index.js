@@ -56,7 +56,11 @@ module.exports = function api(app, coord) {
     if (req.busboy) {
       req.busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
         const store = coord.store;
-        store.store(file, { mime: mimetype, name: filename }).then(receipt => {
+        console.log('Handling received file', file);
+        store.store(file, { mime: mimetype, name: filename })
+        .then(receipt => {
+          console.log('File receipt', receipt);
+          res.setHeader('Content-Type', 'application/json');
           res.end(JSON.stringify(receipt));
         });
       });
