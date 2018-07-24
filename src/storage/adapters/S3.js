@@ -20,7 +20,11 @@ class S3
       Body: input,
     },
     (err, data) => {
-      console.log(err, data);
+      if (err) {
+        console.error(err);
+        return;
+      }
+      console.info('Stored', data);
     });
 
     return input;
