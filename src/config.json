@@ -1,9 +1,4 @@
 {
-  "https": {
-    "port": null,
-    "key": "../cert/key.pem",
-    "cert": "../cert/cert.pem"
-  },
   "storage": {
     "dir": "/tmp"
   }

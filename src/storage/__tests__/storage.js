@@ -3,10 +3,10 @@ const sinon = require('sinon');
 
 const fs = require('fs');
 
-const hash = require('../src/hash');
-const Storage = require('../src/Storage');
-const DiskStorageAdapter = require('../src/storage/Disk');
-const CloudStorageAdapter = require('../src/storage/GoogleCloud');
+const hash = require('../../hash');
+const Storage = require('../Storage');
+const DiskStorageAdapter = require('../adapters/Disk');
+const CloudStorageAdapter = require('../adapters/GCS');
 
 describe('Storage', () => {
   const MOCK_ID = 'Aa12xea2';
@@ -18,7 +18,7 @@ describe('Storage', () => {
 
       beforeEach(done => {
         // Start writing file.
-        file = fs.createReadStream('./test/fixture/image.png');
+        file = fs.createReadStream(__dirname + '/fixture/image.png');
         storePromise = storage.store(file, {
           mime: 'image/png',
           filename: 'other_filename.png',

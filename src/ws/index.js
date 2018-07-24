@@ -3,6 +3,7 @@ const Client = require('./Client');
 
 module.exports = function ws(server, coord) {
   const wss = new WebSocketServer({server, path: '/ws/monitor'});
+  console.log(server);
 
   wss.on('connection', function connection(conn) {
     const client = new Client(conn);

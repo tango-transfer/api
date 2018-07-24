@@ -1,7 +1,7 @@
 const crypto = require('crypto');
 const {Readable} = require('stream');
-const {consume} = require('./stream');
-const random = require('./random');
+const {consume} = require('../stream');
+const random = require('../random');
 
 class Storage
 {

@@ -1,7 +1,7 @@
 const expect = require('expect.js');
 
 const fs = require('fs');
-const hash = require('../src/hash');
+const hash = require('../hash');
 
 function open(path) {
   return fs.createReadStream(path, 'binary');
@@ -12,7 +12,7 @@ describe('Hash', () => {
     let readstream;
 
     beforeEach(() => {
-      readstream = open('./test/fixture/image.png');
+      readstream = open(__dirname + '/fixture/image.png');
     });
 
     [

@@ -3,48 +3,26 @@ const http = require('http');
 const express = require('express');
 
 const Coordinator = require('./Coordinator');
-const GCS = require('@google-cloud/storage');
-const DiskAdapter = require('./storage/Disk');
-const GCSAdapter = require('./storage/GoogleCloud');
-const Storage = require('./Storage');
+const {createStorage} = require('./storage');
 
 const api = require('./api');
 const ws = require('./ws');
-
-const config = require(process.env.CONFIG || './config.json');
-
-function createStore() {
-  //return new Storage(new DiskAdapter(config.storage.dir));
-
-  const storage = GCS({
-    projectId: '141385452850',
-    keyFilename: 'pomle-com-1d6cb19c34cb.json',
-  });
-
-  const bucket = storage.bucket('pomle-com.appspot.com');
-  return new Storage(new GCSAdapter(bucket));
-}
 
 {
   const app = express();
   app.use('/', express.static('public'));
 
-  const store = createStore();
-  const coord = new Coordinator(store);
+  const storage = createStorage();
+  const coord = new Coordinator(storage);
 
   app.use('/', api(app, coord));
-
-  const options = {
-    key: fs.readFileSync(config.https.key),
-    cert: fs.readFileSync(config.https.cert),
-  };
 
   const server = http.createServer(app);
   app.server = server;
 
   ws(server, coord);
 
-  server.listen(config.https.port || process.env.PORT || 8080);
+  server.listen(process.env.PORT || 8080);
   server.on('listening', () => {
       const bound = server.address();
       console.info(`HTTPS running on ${bound.address}:${bound.port}`);
