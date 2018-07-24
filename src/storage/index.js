@@ -1,3 +1,4 @@
+const AWS = require('aws-sdk');
 const GCS = require('@google-cloud/storage');
 
 const Storage = require('./Storage.js');
@@ -11,12 +12,23 @@ function createAdapter() {
 
   if (type === 'gcs') {
     const storage = GCS({
-      projectId: '141385452850',
-      keyFilename: 'pomle-com-1d6cb19c34cb.json',
+      projectId: env.STORAGE_ADAPTER_GCS_PROJECT_ID,
+      keyFilename: env.STORAGE_ADAPTER_GCS_KEYFILE_NAME,
     });
 
-    const bucket = storage.bucket('pomle-com.appspot.com');
+    const bucket = storage.bucket(env.STORAGE_ADAPTER_GCS_BUCKET);
     return new GCSAdapter(bucket)
+  }
+  else if (type === 's3') {
+    console.log('Using S3 Storage Adapter');
+
+    const s3 = new AWS.S3({
+      accessKeyId: env.STORAGE_ADAPTER_S3_ACCESS_KEY_ID,
+      secretAccessKey: env.STORAGE_ADAPTER_S3_SECRET_ACCESS_KEY,
+      sslEnabled: true,
+    });
+
+    return new S3Adapter(env.STORAGE_ADAPTER_S3_BUCKET, s3);
   }
   else if (type === 'disk') {
     return new DiskAdapter(env.STORAGE_ADAPTER_PATH);
