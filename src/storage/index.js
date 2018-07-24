@@ -20,8 +20,6 @@ function createAdapter() {
     return new GCSAdapter(bucket)
   }
   else if (type === 's3') {
-    console.log('Using S3 Storage Adapter');
-
     const s3 = new AWS.S3({
       accessKeyId: env.STORAGE_ADAPTER_S3_ACCESS_KEY_ID,
       secretAccessKey: env.STORAGE_ADAPTER_S3_SECRET_ACCESS_KEY,
@@ -39,6 +37,7 @@ function createAdapter() {
 
 function createStorage() {
   const adapter = createAdapter();
+  console.log('Using adapter', adapter);
   return new Storage(adapter);
 }
 
