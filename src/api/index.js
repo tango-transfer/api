@@ -68,7 +68,6 @@ module.exports = function api(app, coord) {
           }));
         });
       });
-      req.pipe(req.busboy);
     }
   });
 
