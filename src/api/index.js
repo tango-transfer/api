@@ -52,7 +52,7 @@ module.exports = function api(app, coord) {
     });
   });
 
-  router.post('/file', busboy(), (req, res) => {
+  router.post('/file', busboy({ immediate: true }), (req, res) => {
     if (req.busboy) {
       req.busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
         const store = coord.store;
@@ -61,7 +61,11 @@ module.exports = function api(app, coord) {
         .then(receipt => {
           console.log('File receipt', receipt);
           res.setHeader('Content-Type', 'application/json');
-          res.end(JSON.stringify(receipt));
+          res.writeHead(200, { Connection: 'close' });
+          res.end(JSON.stringify({
+            id: receipt.id,
+            secret: receipt.secret,
+          }));
         });
       });
       req.pipe(req.busboy);
