@@ -52,7 +52,7 @@ module.exports = function api(app, coord) {
     });
   });
 
-  router.post('/file', busboy({ immediate: true }), (req, res) => {
+  router.post('/file', busboy(), (req, res) => {
     if (req.busboy) {
       req.busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
         const store = coord.store;
