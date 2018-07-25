@@ -55,20 +55,9 @@ module.exports = function api(app, coord) {
   router.post('/file', busboy(), (req, res) => {
     if (req.busboy) {
       req.busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
-        file.on('data', data => console.log('Received %s bytes', data.length));
-        file.on('end', () => console.log('All file data received.'));
-
         const store = coord.store;
-        console.log('Handling received file', file);
-        store.store(file, { mime: mimetype, name: filename })
-        .then(receipt => {
-          console.log('File receipt', receipt);
-          res.setHeader('Content-Type', 'application/json');
-          res.writeHead(200, { Connection: 'close' });
-          res.end(JSON.stringify({
-            id: receipt.id,
-            secret: receipt.secret,
-          }));
+        store.store(file, { mime: mimetype, name: filename }).then(receipt => {
+          res.end(JSON.stringify(receipt));
         });
       });
       req.pipe(req.busboy);
